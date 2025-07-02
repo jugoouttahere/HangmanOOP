@@ -6,6 +6,6 @@ public class InputValidator {
 
     public boolean isValidate() {
 
-        return false;
+        return true;
     }
 }
