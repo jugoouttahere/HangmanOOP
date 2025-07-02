@@ -8,16 +8,19 @@ import java.util.Random;
 
 public class RandomWordSelector {
     private final List<String> DICTIONARY = new ArrayList<>();
-    private final String FILE_NAME;
+    private final String FILE_PATH;
 
-    public RandomWordSelector(String fileName) {
-        this.FILE_NAME = fileName;
+    public RandomWordSelector(String filePath) {
+        this.FILE_PATH = filePath;
         readWordsFromFile();
     }
 
     private void readWordsFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
             br.lines().forEach(DICTIONARY::add);
+            if (DICTIONARY.isEmpty()) {
+                System.out.println("Словарь пуст!");
+            }
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден!");
         } catch (IOException e) {
