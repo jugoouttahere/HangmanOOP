@@ -1,4 +1,5 @@
 public class HangmanDrawer {
+
     private final String[] HANGMAN_STATE = {
             " +---+\n |   |\n |   O\n |    \n |    \n =========",
 

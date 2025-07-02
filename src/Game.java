@@ -4,68 +4,60 @@ import java.io.InputStreamReader;
 
 public class Game {
     private final HangmanDrawer hangmanDrawer = new HangmanDrawer();
-    private final RandomWordSelector randomWordSelector = new RandomWordSelector("src/content/dictionary.txt");
+    private final RandomWordSelector randomWordSelector =new RandomWordSelector();
     private final WordMask wordMask = new WordMask();
 
     public void start() {
-
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-
             String userInput;
-            int numberOfMistakes;
+            int maxMistakes = 6;
+            int mistakesCount = 0;
 
             while (true) {
-                System.out.println("[Н]ачать игру / [В]ыйти из игры");
+                System.out.println("\nНачать новую игру? (Да/ Нет)");
                 userInput = br.readLine();
-
-                if (userInput.equalsIgnoreCase("В")) {
-                    System.out.println("Выход из игры...\nДо встречи!");
-
-                } else if (userInput.equalsIgnoreCase("Н")) {
-                    numberOfMistakes = 0;
+                if (userInput.equalsIgnoreCase("да")) {
+                    mistakesCount = 0;
+                    wordMask.defaultState();
                     String letter;
                     String randomWord = randomWordSelector.getRandomWord();
+                    wordMask.setWord(randomWord);
                     System.out.println("Слово загадано!");
-                    wordMask.printMask();
 
-                    while (!wordMask.isWordGuessed()) {
-                        System.out.println("Угадай букву!");
+                    while (mistakesCount != maxMistakes) {
+                        System.out.println("\nВведите букву!");
                         letter = br.readLine();
+                        //TODO VALIDATE
 
                         if (wordMask.isLetterUsed(letter)) {
-                            System.out.printf("Вы уже использовали букву - '%s' \n", letter.toUpperCase());
+                            System.out.printf("Вы уже использовали букву - '%s'", letter.toUpperCase());
                         } else {
-                            wordMask.addToUsedLetter(letter);
-                            if (wordMask.containLetterInWord(letter)) {
+                            wordMask.addToUsedLetters(letter);
+                            if (wordMask.containsLetterInWord(letter)) {
                                 System.out.println("Вы угадали букву!");
+                                wordMask.updateMask(letter);
                                 System.out.print("Слово: ");
-                                wordMask.updateMask(letter.charAt(0));
                                 wordMask.printMask();
                             } else {
-                                System.out.println("Вы не угадали... Попробуйте еще");
-                                numberOfMistakes++;
-                                System.out.printf("Ошибок %d/6\n", numberOfMistakes);
-                                hangmanDrawer.printHangman(numberOfMistakes);
+                                mistakesCount++;
+                                System.out.printf("Вы не угадали! использовано попыток %d/6\n", mistakesCount);
+                                hangmanDrawer.printHangman(mistakesCount);
                             }
                         }
                     }
+                    System.out.println("Вы проиграли!");
+                    System.out.printf("Было загадано слово: %s", randomWord);
 
-                    if (numberOfMistakes > 5) {
-                        System.out.println("Вы проиграли(");
-                        System.out.printf("Было загадано слово: ", randomWord);
-                        break;
-                    } else if (wordMask.isWordGuessed()) {
-                        System.out.printf("Поздравляем! Вы угадали слово: ");
-                    }
-
+                } else if (userInput.equalsIgnoreCase("нет")) {
+                    System.out.println("Выход из игры...");
+                    break;
                 } else {
-                    System.out.println("Некорректный ввод!");
+                    System.out.println("Некорректный ввод! Введите [Да] или [Нет]");
                 }
             }
 
         } catch (IOException e) {
             System.out.println("Что то пошло не так!");
         }
-
     }
 }

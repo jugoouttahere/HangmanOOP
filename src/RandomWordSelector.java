@@ -8,23 +8,21 @@ import java.util.Random;
 
 public class RandomWordSelector {
     private final List<String> DICTIONARY = new ArrayList<>();
-    private final String FILE_PATH;
 
-    public RandomWordSelector(String filePath) {
-        this.FILE_PATH = filePath;
+    public RandomWordSelector() {
         readWordsFromFile();
     }
 
     private void readWordsFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/content/dictionary.txt"))) {
             br.lines().forEach(DICTIONARY::add);
             if (DICTIONARY.isEmpty()) {
-                System.out.println("Словарь пуст!");
+                throw new RuntimeException("Файл с словарем пуст!");
             }
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден!");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Что то пошло не так!");
         }
     }
 
@@ -32,5 +30,4 @@ public class RandomWordSelector {
         Random random = new Random();
         return DICTIONARY.get(random.nextInt(DICTIONARY.size()));
     }
-
 }
