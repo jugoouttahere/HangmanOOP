@@ -1,4 +1,5 @@
 public class HangmanDrawer {
+
     private final String[] HANGMAN_STATE = {
             " +---+\n |   |\n |   O\n |    \n |    \n =========",
 
@@ -14,6 +15,6 @@ public class HangmanDrawer {
     };
 
     public void printHangman(int numberOfMistakes) {
-        System.out.println(HANGMAN_STATE[numberOfMistakes]);
+        System.out.println(HANGMAN_STATE[numberOfMistakes - 1]);
     }
 }

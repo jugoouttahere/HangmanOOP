@@ -3,34 +3,35 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class WordMask {
-    private final String word;
+    private String word;
     private final StringBuilder mask = new StringBuilder();
+    private final Set<String> uniqueWordsLetters = new HashSet<>();
     private final Set<String> usedLetters = new HashSet<>();
-    private final Set<String> wordLetters = new HashSet<>();
 
-    public WordMask(String word) {
-        this.word = word;
+
+    public void setWord(String word) {
+        this.word = word.toLowerCase();
         this.mask.append("*".repeat(word.length()));
-        Collections.addAll(wordLetters, word.split(""));
+        Collections.addAll(uniqueWordsLetters, word.split(""));
     }
 
     public void printMask() {
-        System.out.println(mask);
+        System.out.print(mask);
     }
 
-    public void updateMask(Character letter) {
+    public void updateMask(String letter) {
         for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i) == letter) {
-                mask.setCharAt(i, letter);
+            if (Character.toString(word.charAt(i)).equalsIgnoreCase(letter)) {
+                mask.setCharAt(i, letter.charAt(0));
             }
         }
     }
 
-    public boolean containLetterInWord(String letter) {
-        return wordLetters.contains(letter);
+    public boolean containsLetterInWord(String letter) {
+        return uniqueWordsLetters.contains(letter);
     }
 
-    public void addToUsedLetter(String letter) {
+    public void addToUsedLetters (String letter) {
         usedLetters.add(letter);
     }
 
@@ -38,8 +39,14 @@ public class WordMask {
         return usedLetters.contains(letter);
     }
 
-    public boolean isWordGuessed() {
-        return word.equalsIgnoreCase(mask.toString());
+    public void defaultState() {
+        usedLetters.clear();
+        uniqueWordsLetters.clear();
+        word = null;
+        mask.setLength(0);
     }
 
+    public boolean isWordGuessed() {
+        return mask.toString().equalsIgnoreCase(word);
+    }
 }
