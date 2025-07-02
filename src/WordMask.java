@@ -10,7 +10,7 @@ public class WordMask {
 
 
     public void setWord(String word) {
-        this.word = word;
+        this.word = word.toLowerCase();
         this.mask.append("*".repeat(word.length()));
         Collections.addAll(uniqueWordsLetters, word.split(""));
     }
@@ -40,7 +40,13 @@ public class WordMask {
     }
 
     public void defaultState() {
-        uniqueWordsLetters.clear();
         usedLetters.clear();
+        uniqueWordsLetters.clear();
+        word = null;
+        mask.setLength(0);
+    }
+
+    public boolean isWordGuessed() {
+        return mask.toString().equalsIgnoreCase(word);
     }
 }
